@@ -31,6 +31,8 @@ class Miner {
 
     /** miner state data */
     this._mining = false;
+    // disconnect, registerFail, serverUnable, serverFull, waitPulling, mining
+    this._miningState = 'disconnect';
     this._pulling = false;
     this._pullingTime = 0;
     this._activeThreads = 0;
@@ -81,6 +83,7 @@ class Miner {
   }
 
   stop() {
+    Log.i('Miner', 'stop mining');
     this._socket.close();
     this._webWorkers.map((v) => { v.terminate(); });
     this._webWorkers = [];
@@ -98,7 +101,7 @@ class Miner {
     this._socket.on('disconnect', (reason) => {
       Log.i(Miner, `lose ming pool connection, ${reason}`);
       this._mining = false;
-      // TODO[Azard] this._ui.updateState('disconnect');
+      this._miningState = 'disconnect';
     });
 
     // registerBack
@@ -112,23 +115,23 @@ class Miner {
       else if (data === 'b') {
         Log.e(Miner, 'register to server fail');
         setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
-        // TODO[Azard] this._ui.updateState('disconnect');
+        this._miningState = 'registerFail';
       }
       // serverUnable
       else if (data === 'a') {
         Log.e(Miner, 'server unable');
         setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
-        // TODO[Azard] this._ui.updateState('disconnect');
+        this._miningState = 'serverUnable';
       }
       // server full
       else if (data === 'd') {
         Log.e(Miner, 'server full');
         setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
-        // TODO[Azard] this._ui.updateState('disconnect');
+        this._miningState = 'serverFull';
       } else {
         Log.e(Miner, 'unknown register back state');
         setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
-        // TODO[Azard] this._ui.updateState('disconnect');
+        this._miningState = 'registerFail';
       }
     });
 
@@ -151,7 +154,7 @@ class Miner {
         this._workloads.push(i);
       }
       Log.i(Miner, `on assignJob, timeNonce36 ${this._timeNonce36}, currentNonce ${currentNonce}`);
-      // TODO[Azard] this._ui.updateState('mining');
+      this._miningState = 'mining';
       // 第一次收到任务分配，启动线程开始挖矿
       if (this._mining === false) {
         this._mining = true;
@@ -172,7 +175,7 @@ class Miner {
       for (let i = currentNonce; i < maxNonce; i++) {
         this._workloads.push(i);
       }
-      // TODO[Azard] this._ui.updateState('mining');
+      this._miningState = 'mining';
       Log.i(Miner, `on pullBack, timeNonce36 ${this._timeNonce36}, currentNonce ${currentNonce}`);
     });
   }
@@ -266,6 +269,7 @@ class Miner {
           if (workload === undefined) {
             worker.postMessage(['reready', { time: 500 }]);
             Log.w(Miner, `Miner ${threadNo} waiting for pulling workloads`);
+            this._miningState = 'waitPulling';
             break;
           }
           const blockHeaderBuffer = this._blockHeaderBuffer;
@@ -324,10 +328,15 @@ class Miner {
     this._hashrate = Math.round(totalCount / (nowTime - preTime) * 1000);
 
     Log.i(Miner, `current hashrate: ${this._hashrate}`);
-
-    // TODO[Azard] UI
   }
 
+  get hashrate() {
+    return this._hashrate;
+  }
+
+  get miningState() {
+    return this._miningState;
+  }
 
 }
 
