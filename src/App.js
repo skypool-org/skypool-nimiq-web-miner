@@ -31,7 +31,7 @@ class App extends Component {
     server: 'sh1',
     address: 'NQ48 8CKH BA24 2VR3 N249 N8MN J5XX 74DB 5XJ8',
     name: '*',
-    thread: this.MaxThreads - 1,
+    thread: 0,
     miningState: 'default',
     hashrate: 0,
     miningTime: 0,
@@ -45,6 +45,8 @@ class App extends Component {
     } else {
       this.MaxThreads = 8;
     }
+    this.state.thread = this.MaxThreads - 1;
+
     this.loadLocales();
     this.init();
     this.serverComp = null;
@@ -317,8 +319,8 @@ class App extends Component {
                         </Tooltip>
                       </span>
                     )}>
-                    <Slider disabled={this.state.switch} defaultValue={this.state.thread} min={0} max={ MaxThreads }
-                      ref={(c) => this.threadComp = c} step={1} />
+                    <Slider disabled={this.state.switch} defaultValue={this.state.thread} min={0} max={MaxThreads}
+                      ref={(c) => this.threadComp = c} />
                   </FormItem>
                   <Switch size="large" checked={this.state.switch} onChange={this.switchMining.bind(this)} disabled={!this.state.isAbleMining} checkedChildren={intl.get('swtichStart')} unCheckedChildren={intl.get('swtichStop')} />
                 </Form>
