@@ -1,52 +1,73 @@
 import React, { Component } from 'react';
-import G2 from '@antv/g2';
-
-const data = [
-  { year: '1991', value: 15468 },
-  { year: '1992', value: 16100 },
-  { year: '1993', value: 15900 },
-  { year: '1994', value: 17409 },
-  { year: '1995', value: 17000 },
-  { year: '1996', value: 31056 },
-  { year: '1997', value: 31982 },
-  { year: '1998', value: 32040 },
-  { year: '1999', value: 33233 }
-];
-const chart = new G2.Chart({
-  container: 'mountNode',
-  forceFit: true,
-  height: window.innerHeight
-});
-chart.source(data);
-chart.scale({
-  value: {
-    min: 10000
-  },
-  year: {
-    range: [ 0 , 1 ]
-  }
-});
-chart.axis('value', {
-  label: {
-    formatter: val => {
-      return (val / 10000).toFixed(1) + 'k';
-    }
-  }
-});
-chart.tooltip({
-  crosshairs: {
-    type: 'line'
-  }
-});
-chart.area().position('year*value');
-chart.line().position('year*value').size(2);
-
-console.log(chart.render());
+import ReactDOM from 'react-dom';
+import { Chart, Geom, Axis, Tooltip, Legend, Coord } from 'bizcharts';
+import './HashFig.css';
 
 class HashFig extends Component {
 
+  constructor(props) {
+    super();
+  }
+
   render() {
-    return chart.render();
+    const data = [
+      { time: new Date().getTime() - 9000, hashrate: 1468 },
+      { time: new Date().getTime() - 8000, hashrate: 1468 },
+      { time: new Date().getTime() - 7000, hashrate: 3468 },
+      { time: new Date().getTime() - 6000, hashrate: 2468 },
+      { time: new Date().getTime() - 5000, hashrate: 468 },
+      { time: new Date().getTime() - 4000, hashrate: 1468 },
+      { time: new Date().getTime() - 3000, hashrate: 15468 },
+      { time: new Date().getTime() - 2000, hashrate: 16100 },
+      { time: new Date().getTime() - 1000, hashrate: 14100 },
+      { time: new Date().getTime(), hashrate: 14100 },
+      { time: new Date().getTime() + 1000, hashrate: 14100 },
+
+    ];
+    const scale={
+      time: {
+      },
+      hashrate: {
+        type:"linear",
+      },
+    };
+
+    // 渲染图表
+    return (
+      <div className="HashFig">
+        <div className="HashFig-title-default">
+          <h3 style={{ color: 'rgba(255,255,255,0.85)', fontSize: '16px', margin: '0px', fontWeight: 'normal' }}>
+            算力时间图
+          </h3>
+        </div>
+        <hr className="HashFig-line"/>
+        <div className="HashFig-body">
+          <Chart height={400} data={this.props.data} scale={scale} padding={[ 30, 80, 50, 80]} forceFit>
+            <Axis name="time" label={{
+              formatter: val => {
+                return new Date(parseInt(val)).toLocaleTimeString();
+              }
+            }}/>
+            <Axis name="hashrate" label={{
+              formatter: val => {
+                return (val / 1000).toFixed(2) + ' KH/s';
+              }
+            }} />
+            <Tooltip crosshairs={{ type: 'cross' }}/>
+            <Geom type="area" position="time*hashrate" color={['hashrate', '#722ed1']}
+              tooltip={['time*hashrate', (time, hashrate) => {
+                return {
+                    //自定义 tooltip 上显示的 title 显示内容等。
+                  name: '算力',
+                  title: new Date(time).toLocaleTimeString(),
+                  value: (hashrate / 1000).toFixed(2) + ' KH/s',
+                };
+              }]}/>
+            <Geom type="line" position="time*hashrate" size={2} color='#722ed1' />
+          </Chart>
+        </div>
+      </div>
+    );
   }
 }
 

@@ -68,31 +68,22 @@ class SettingCard extends React.Component {
         </div>
         <hr className="StateCard-line"/>
         <div className="StateCard-body">
-          <Form>
-            <FormItem {...formItemLayout}
-              label={(
-                <span><Icon type="rocket" /> 算力</span>
-              )}>
-              {(this.props.hashrate / 1000).toFixed(2)} KH/s
-            </FormItem>
-            <FormItem {...formItemLayout}
-              label={(
-                <span><Icon type="desktop" /> 线程数</span>
-              )}>
-              {this.props.thread}
-            </FormItem>
-            <FormItem {...formItemLayout}
-              label={(
-                <span><Icon type="clock-circle-o" /> 时长</span>
-              )}>
+          <div style={{ fontSize: '24px', color: 'rgba(0,0,0,0.8)', padding: '8px' }}>
+            <span style={{ fontSize: '16px', color: 'rgba(0,0,0,0.8)'}}>
+              <Icon type="rocket" /> 算力：
+            </span>
+            {(this.props.hashrate / 1000).toFixed(2)} KH/s
+          </div>
+          <hr className="StateCard-line"/>
+          <div style={{ fontSize: '24px', color: 'rgba(0,0,0,0.8)', padding: '8px' }}>
+            <span style={{ fontSize: '16px', color: 'rgba(0,0,0,0.8)'}}>
+              <Icon type="clock-circle-o" /> 时长：</span>
               {[
                 parseInt(this.props.miningTime / 3600000),
                 parseInt(this.props.miningTime / 60000 % 60),
                 parseInt(this.props.miningTime / 1000 % 60)
-              ].join(":")
-               .replace(/\b(\d)\b/g, "0$1")}
-            </FormItem>
-          </Form>
+              ].join(":").replace(/\b(\d)\b/g, "0$1")}
+          </div>
         </div>
       </div>
     );

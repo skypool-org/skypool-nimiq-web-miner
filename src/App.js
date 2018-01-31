@@ -18,6 +18,7 @@ class App extends Component {
   MaxThreads = navigator.hardwareConcurrency;
   updateInterval = null;
   startMiningTime = new Date();
+  hashrateHistory = [];
 
   state = {
     isAbleMining: false,
@@ -29,6 +30,7 @@ class App extends Component {
     miningState: 'default',
     hashrate: 0,
     miningTime: 0,
+    hashrateHistory: [],
   }
 
   constructor() {
@@ -54,6 +56,10 @@ class App extends Component {
     if (localStorage.getItem('thread') !== null) {
       this.state.thread = parseInt(localStorage.getItem('thread'));
     }
+    this.updateHashFigObject = setInterval(() => {
+      this.updateHashFig();
+    }, 5000);
+    this.updateHashFigCount = 0;
   }
 
   init() {
@@ -97,6 +103,24 @@ class App extends Component {
       hashrate: hashrate,
       miningTime: miningTime,
     });
+  }
+
+  updateHashFig() {
+    this.updateHashFigCount++;
+    if (this.updateHashFigCount > this.hashrateHistory.length / 10) {
+      this.updateHashFigCount = 0;
+      const hashrate = this.state.switch ? this.miner.hashrate : 0;
+      this.hashrateHistory.push({
+        time: new Date(),
+        hashrate: hashrate,
+      });
+      if (this.hashrateHistory.length > 50) {
+        this.hashrateHistory.shift();
+      }
+      this.setState({
+        hashrateHistory : this.hashrateHistory,
+      });
+    }
   }
 
   switchMining(checked) {
@@ -200,7 +224,7 @@ class App extends Component {
             </Col>
           </Row>
         </header>
-        <Row type="flex" justify="center" align="top" gutter={24}>
+        <Row type="flex" justify="center" align="bottom" gutter={24}>
           <Col lg={12} md={14} sm={22} xs={22}>
             <div className="Setting">
               <div className="Setting-title-default">
@@ -271,12 +295,12 @@ class App extends Component {
           </Col>
           <Col lg={6} md={8} sm={22} xs={22}>
             <StateCard miningState={this.state.miningState} hashrate={this.state.hashrate}
-              thread={this.state.thread} miningTime={this.state.miningTime} />
+              miningTime={this.state.miningTime} />
           </Col>
         </Row>
         <Row type="flex" justify="center" align="top" gutter={24}>
-          <Col span={20}>
-            <HashFig />
+          <Col lg={18} md={22} sm={22} xs={22}>
+            <HashFig data={this.state.hashrateHistory}/>
           </Col>
         </Row>
       </div>
