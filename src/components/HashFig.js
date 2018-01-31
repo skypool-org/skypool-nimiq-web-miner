@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Chart, Geom, Axis, Tooltip } from 'bizcharts';
+import { Chart, Geom, Axis, Tooltip, G2 } from 'bizcharts';
 import intl from 'react-intl-universal';
 import './HashFig.css';
 
@@ -7,6 +7,7 @@ class HashFig extends Component {
 
   constructor(props) {
     super();
+    G2.track(false);
   }
 
   render() {

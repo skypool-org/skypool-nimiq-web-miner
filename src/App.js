@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Icon, Input, Slider, Tooltip, Radio, Switch, message } from 'antd';
+import { Row, Col, Form, Icon, Input, Tooltip, Radio, Switch, Slider, message } from 'antd';
 import intl from 'react-intl-universal';
 import './App.css';
 import Miner from './Miner.js';
@@ -21,13 +21,11 @@ message.config({
 
 class App extends Component {
 
-  MaxThreads = navigator.hardwareConcurrency;
   updateInterval = null;
   startMiningTime = new Date();
   hashrateHistory = [];
 
   state = {
-    i18nDone: false,
     isAbleMining: false,
     switch: false,
     server: 'sh1',
@@ -42,6 +40,12 @@ class App extends Component {
 
   constructor() {
     super();
+    if (typeof navigator === 'object' && navigator.hardwareConcurrency) {
+      this.MaxThreads = navigator.hardwareConcurrency;
+    } else {
+      this.MaxThreads = 8;
+    }
+    this.loadLocales();
     this.init();
     this.serverComp = null;
     this.server = null;
@@ -69,19 +73,12 @@ class App extends Component {
     this.updateHashFigCount = 0;
   }
 
-  componentDidMount() {
-    this.loadLocales();
-  }
-
   loadLocales() {
     const locale = localStorage.getItem('language') || 'zh-CN';
     intl.init({
       currentLocale: locale,
       locales,
     })
-    .then(() => {
-	    this.setState({i18nDone: true});
-    });
   }
 
   init() {
@@ -239,7 +236,6 @@ class App extends Component {
     };
 
     return (
-      this.state.i18nDone &&
       <div className="App">
         <header style={{ marginBottom: '24px' }}>
           <Row type="flex" justify="space-around" align="bottom">
@@ -322,7 +318,7 @@ class App extends Component {
                       </span>
                     )}>
                     <Slider disabled={this.state.switch} defaultValue={this.state.thread} min={0} max={ MaxThreads }
-                      ref={(c) => this.threadComp = c} />
+                      ref={(c) => this.threadComp = c} step={1} />
                   </FormItem>
                   <Switch size="large" checked={this.state.switch} onChange={this.switchMining.bind(this)} disabled={!this.state.isAbleMining} checkedChildren={intl.get('swtichStart')} unCheckedChildren={intl.get('swtichStop')} />
                 </Form>
