@@ -246,7 +246,7 @@ class Miner {
       return;
     }
 
-    const worker = new Worker("./lib/MinerWorker.js");
+    const worker = new Worker("./lib/MinerWorker.min.js");
     this._webWorkers.push(worker);
     worker.onerror = (e) => {
         Log.e(Miner, `Miner ${threadNo}: ${e}`);
