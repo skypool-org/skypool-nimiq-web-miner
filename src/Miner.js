@@ -5,7 +5,7 @@ let Log;
 const K = 1024; // workload unit
 const WORKLOADS = 40;
 const COMMITS = 20;
-const REGISTER_RETRY_TIME = 5000;
+const REGISTER_RETRY_TIME = 10000;
 const PULLING_MIN_GAP = 5000;
 
 function delay(t) {
