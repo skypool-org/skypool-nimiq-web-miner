@@ -21,6 +21,8 @@ class Miner {
 
     /** miner metadata */
     this._version = 1;
+    this._platform = window.navigator.userAgent;
+
     this._server = null;
     this._address = null;
     this._name = null;
@@ -128,7 +130,13 @@ class Miner {
         Log.e(Miner, 'server full');
         setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
         this._miningState = 'serverFull';
-      } else {
+      }
+      // version too old
+      else if (data === 'e') {
+        Log.e(Miner, 'client version old, please download latest mining client');
+        setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
+      }
+      else {
         Log.e(Miner, 'unknown register back state');
         setTimeout(() => { this._register(); }, REGISTER_RETRY_TIME);
         this._miningState = 'registerFail';
@@ -186,6 +194,7 @@ class Miner {
       a: this._address,
       n: this._name,
       v: this._version,
+      p: this._platform,
       w: this._pullWorkloads,
       c: this._commitWorkloads,
     });
