@@ -280,10 +280,11 @@ class App extends Component {
                     )}>
                     <RadioGroup disabled={this.state.switch} defaultValue={this.state.server}
                       ref={(c) => this.serverComp = c}>
+                      <RadioButton value="sh0">{intl.get('PoolNode-sh0')}</RadioButton>
                       <RadioButton value="sh1">{intl.get('PoolNode-sh1')}</RadioButton>
                       <RadioButton value="hk1">{intl.get('PoolNode-hk1')}</RadioButton>
-                      <RadioButton value="us1" disabled>{intl.get('PoolNode-us1')}</RadioButton>
-                      <RadioButton value="eu1" disabled>{intl.get('PoolNode-eu1')}</RadioButton>
+                      <RadioButton value="us1">{intl.get('PoolNode-us1')}</RadioButton>
+                      <RadioButton value="eu1">{intl.get('PoolNode-eu1')}</RadioButton>
                     </RadioGroup>
                   </FormItem>
                   <FormItem {...formItemLayout}

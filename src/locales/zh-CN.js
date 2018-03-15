@@ -15,6 +15,7 @@ module.exports = ({
   "settingTipName": "用于在矿池主页查看每台机器的收益",
   "settingTipThread": "使用 CPU 的核数，全力挖矿建议选满，挖矿的同时需要使用电脑建议选到最大值减1",
 
+  "PoolNode-sh0": "上海 0",
   "PoolNode-sh1": "上海 1",
   "PoolNode-hk1": "香港 1",
   "PoolNode-us1": "北美 1",

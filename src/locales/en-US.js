@@ -15,6 +15,7 @@ module.exports = ({
   "settingTipName": "Used as label to see details of each machine on skypool main page",
   "settingTipThread": " CPU's core use to mining, full mining recommended election full, needing to use the computer at the same time is recommended to choose the maximum minus 1",
 
+  "PoolNode-sh1": "SH 0",
   "PoolNode-sh1": "SH 1",
   "PoolNode-hk1": "HK 1",
   "PoolNode-us1": "US 1",
