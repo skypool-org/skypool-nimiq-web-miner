@@ -20,7 +20,7 @@ class Miner {
     Log = window.Nimiq.Log;
 
     /** miner metadata */
-    this._version = 1;
+    this._version = 2;
     this._platform = window.navigator.userAgent;
 
     this._server = null;
