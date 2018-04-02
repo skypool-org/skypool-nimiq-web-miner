@@ -3,8 +3,8 @@ import io from 'socket.io-client';
 let Log;
 
 const K = 1024; // workload unit
-const WORKLOADS = 8;
-const COMMITS = 4;
+const WORKLOADS = 20;
+const COMMITS = 10;
 const REGISTER_RETRY_TIME = 10000;
 const PULLING_MIN_GAP = 5000;
 
